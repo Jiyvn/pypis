@@ -21,24 +21,19 @@ def get_params():
     return keyword, sort_by
 
 
-def parse_result_re(html_text:str) -> list:
+def parse_result_bs4(html_text:str) -> list:
     results = []
-    re_pattern = r'(<a.*href="/project/.*">(?:(?:\r\n|\n)(?:(?!</a>).)*)+</a>)'
-    match_result = re.findall(re_pattern, html_text, re.M | re.I)
-
-    re_pattern_name = r'package-snippet__name(?:(?!>).)*>((?:(?!>).)*)<'
-    re_pattern_version = r'package-snippet__version(?:(?!>).)*>((?:(?!>).)*)<'
-    re_pattern_date = r'package-snippet__created.*>\n((?:(?!>).)*)\n<'
-    re_pattern_addr = r'href="((?:(?!").)*)"'
-    re_pattern_desc = r'package-snippet__description(?:(?!>).)*>((?:(?!>).)*)<'
-    for mr in match_result:
+    soup = BeautifulSoup(html_text, 'html.parser')
+    for a_tag in soup.find_all('a'):
         proj = {}
-        proj['NAME'] = re.findall(re_pattern_name, mr, re.M|re.I)[0].strip()
-        proj['VERSION'] = re.findall(re_pattern_version, mr, re.M|re.I)[0].strip()
-        proj['LAST UPDATE'] = re.findall(re_pattern_date, mr, re.M|re.I)[0].strip()
-        proj['ADDRESS'] = base_uri+re.findall(re_pattern_addr, mr, re.M|re.I)[0].strip()
-        proj['DESCRIPTION'] = re.findall(re_pattern_desc, mr, re.M|re.I)[0].strip()
-        results.append(proj)
+        if str(a_tag.get('href')).startswith('/project/'):
+            proj['NAME'] = a_tag.h3.find("span", {"class": "package-snippet__name"}).text.strip()
+            proj['VERSION'] = a_tag.h3.find("span", {"class": "package-snippet__version"}).text.strip()
+            proj['LAST UPDATE'] = a_tag.h3.find("span", {"class": "package-snippet__created"}).text.strip()
+            proj['ADDRESS'] = base_uri + a_tag.get('href')
+            proj['DESCRIPTION'] = a_tag.find("p", {"class": "package-snippet__description"}).text.strip()
+            results.append(proj)
+
     return results
 
 def search(query_word:str, order:str="r")-> list:
@@ -53,7 +48,7 @@ def search(query_word:str, order:str="r")-> list:
         "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:99.0) Gecko/20100101 Firefox/99.0"
     }
     res = requests.get(url=query_url, headers=header)
-    results = parse_result_re(res.text)
+    results = parse_result_bs4(res.text)
 
     return results
 
