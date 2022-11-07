@@ -5,7 +5,7 @@ import sys
 base_uri = "https://pypi.org"
 column_spacing = {'NAME':25, 'VERSION':10, 'LAST UPDATE': 10, 'ADDRESS':45, 'DESCRIPTION':40}
 
-def get_params():
+def read_argv():
     if len(sys.argv)<2:
         print("search keyword is must. pls deliver at least one param (keyword)")
         sys.exit(1)
@@ -106,5 +106,5 @@ def beautify_output(pkgs: list[dict], spacings:dict=None):
             print(formatter.format(**v))
 
 
-beautify_output(search(*get_params()), column_spacing)
+beautify_output(search(*read_argv()), column_spacing)
 
