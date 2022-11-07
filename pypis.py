@@ -85,7 +85,7 @@ def beautify_output(pkgs: list[dict], spacings:dict=None):
                 for i in range(int(line_amount)):
                     if str(i) not in lines.keys():
                         lines[str(i)] = {}
-                    lines[str(i)].update({col:col_string[i*space:(i+1)*space-1]})
+                    lines[str(i)].update({col:col_string[i*space:(i+1)*space]})
                 if line_amount > int(line_amount):
                     if str(int(line_amount)) not in lines.keys():
                         lines[str(int(line_amount))] = {}
