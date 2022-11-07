@@ -1,6 +1,7 @@
-import re
 import requests
 import sys
+from bs4 import BeautifulSoup
+
 
 base_uri = "https://pypi.org"
 column_spacing = {'NAME':25, 'VERSION':10, 'LAST UPDATE': 10, 'ADDRESS':45, 'DESCRIPTION':40}
