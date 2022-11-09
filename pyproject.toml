@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[project]
+name = "pypis"
+version = "0.0.0"
+authors = [
+  { name="z2y", email="jiyvn.liu@aliyun.com" },
+]
+description = "search and find package"
+readme = "README.md"
+requires-python = ">=3.0"
+classifiers = [
+    'Environment :: Console',
+    'Environment :: Console :: Curses',
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Jiyvn/pypis"
+"Bug Tracker" = "https://github.com/Jiyvn/pypis/issues"
+
+[project.scripts]
+pis = "pis.pypis:spypi"
