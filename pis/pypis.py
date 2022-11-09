@@ -105,6 +105,9 @@ def beautify_output(pkgs: list[dict], spacings:dict=None):
         for k, v in lines.items():
             print(formatter.format(**v))
 
+def spypi():
+    beautify_output(search(*read_argv()), column_spacing)
 
-beautify_output(search(*read_argv()), column_spacing)
+if __name__ == '__main__':
+    spypi()
 
