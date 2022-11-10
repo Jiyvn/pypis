@@ -71,8 +71,6 @@ def beautify_output(pkgs: list[dict], spacings:dict=None):
         column_formatter = column_formatter + f'{columns[i]}'+'{'+f'{columns[i]}'+f':<{40 if not spacings else spacings[columns[i]]}'+'}'
         column_formatter_params[f'{columns[i]}'] = ''
 
-    print(formatter)
-    print(column_formatter)
     # print columns
     print(column_formatter.format(**column_formatter_params))
 
