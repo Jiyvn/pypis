@@ -3,7 +3,7 @@ import requests
 import sys
 
 base_uri = "https://pypi.org"
-column_spacing = {'NAME':25, 'VERSION':10, 'LAST UPDATE': 10, 'ADDRESS':45, 'DESCRIPTION':40}
+column_spacing = {'NAME':25, 'VERSION':10, 'LAST UPDATE': 8, 'ADDRESS':45, 'DESCRIPTION':40}
 
 def read_argv():
     if len(sys.argv)<2:
@@ -23,13 +23,13 @@ def read_argv():
 
 def parse_result_re(html_text:str) -> list:
     results = []
-    re_pattern = r'(<a.*href="/project/.*">(?:(?:\r\n|\n)(?:(?!</a>).)*)+</a>)'
+    re_pattern = r'(<a.*href="/project/.+">(?:(?:\r\n|\n)(?:(?!</a>).)*)+</a>)'
     match_result = re.findall(re_pattern, html_text, re.M | re.I)
 
     re_pattern_name = r'package-snippet__name(?:(?!>).)*>((?:(?!>).)*)<'
     re_pattern_version = r'package-snippet__version(?:(?!>).)*>((?:(?!>).)*)<'
     re_pattern_date = r'package-snippet__created.*>\n((?:(?!>).)*)\n<'
-    re_pattern_addr = r'href="((?:(?!").)*)"'
+    re_pattern_addr = r'href="((?:(?!").)*)/"'
     re_pattern_desc = r'package-snippet__description(?:(?!>).)*>((?:(?!>).)*)<'
     for mr in match_result:
         proj = {}
@@ -71,6 +71,8 @@ def beautify_output(pkgs: list[dict], spacings:dict=None):
         column_formatter = column_formatter + f'{columns[i]}'+'{'+f'{columns[i]}'+f':<{40 if not spacings else spacings[columns[i]]}'+'}'
         column_formatter_params[f'{columns[i]}'] = ''
 
+    print(formatter)
+    print(column_formatter)
     # print columns
     print(column_formatter.format(**column_formatter_params))
 
@@ -78,7 +80,7 @@ def beautify_output(pkgs: list[dict], spacings:dict=None):
     for pkg in pkgs:
         lines = {}
         for col, col_string in pkg.items():
-            space = len(col) + spacings[col]
+            space = len(col) + spacings[col]-2
             v_len = len(pkg[col])
             line_amount = v_len/space
             if line_amount >= 1:
