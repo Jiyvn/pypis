@@ -2,24 +2,36 @@ import re
 import requests
 import sys
 
+
 base_uri = "https://pypi.org"
 column_spacing = {'NAME':25, 'VERSION':10, 'LAST UPDATE': 8, 'ADDRESS':45, 'DESCRIPTION':40}
 
 def read_argv():
     if len(sys.argv)<2:
-        print("search keyword is must. pls deliver at least one param (keyword)")
+        print("search keyword is must."+
+              "\nUsage: pis <package_name> <sorting>")
         sys.exit(1)
 
     keyword = sys.argv[1]
+    help_me(keyword)
 
     sort_by = "r"
     if len(sys.argv)>2:
         sort_by = sys.argv[2]
         if sort_by not in ('r', 'd', 't'):
-            print('''"{}" is not expected. 'r' for relevance, 'd' for update date, 't' for trending.'''.format(sort_by))
+            print('''"{}" is not expected. 'r' by relevance, 'd' by update date, 't' by trending.'''.format(sort_by))
             sys.exit(1)
     return keyword, sort_by
 
+
+def help_me(farg: str):
+    if "--help" in farg or "-h" in farg:
+        print("Usage:" +
+              "\npis <package_name> <sorting>" +
+              "\n\nOptions:" +
+              "\n<sorting>\t`r`/`d`/`t` are available." +
+              "\n\t\t`r` by relevance, `d` by update date, `t` by trending\n")
+        sys.exit(1)
 
 def parse_result_re(html_text:str) -> list:
     results = []
